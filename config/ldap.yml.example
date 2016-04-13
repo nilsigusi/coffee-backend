@@ -1,0 +1,12 @@
+server:
+  host: 'hostname'
+  port: 636
+  encryption: 'simple_tls'
+
+admin:
+  dn: 'dn'
+  password: 'passwd'
+
+binding:
+  base: 'DC=edu'
+  user_field: 'sAMAccountName'

@@ -1,0 +1,2 @@
+class Cardnum < ApplicationRecord
+end
