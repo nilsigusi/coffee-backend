@@ -1,20 +1,12 @@
 # Simple Coffee Counter - backend server
 
-This is a RAILS-4 backend API for the coffee counter
+This is a RAILS-5 backend API for the coffee counter.
 
-It's just a test for now, no production. So many bugs etc...
+Its a usual RESTfull API using `JWT` for authentication.
 
 ## Install
 
-see `doc/INSTALL.md`
-
-## Run for development
-
-```
-bundle install
-rails db:migrate RAILS_ENV=development
-rails server -b 0.0.0.0
-```
+[see this instructions](doc/INSTALL.md)
 
 # License
 
