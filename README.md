@@ -11,5 +11,4 @@ Its a usual RESTfull API using `JWT` for authentication.
 # License
 
 GNU GPL v3 or newer,
-
 Copyright (c) 2015 to Dmitry Nilsen

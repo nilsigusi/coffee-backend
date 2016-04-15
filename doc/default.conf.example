@@ -3,25 +3,61 @@ upstream app {
     server unix:/var/sockets/unicorn.myapp.sock fail_timeout=0;
 }
 
+## Redirects all HTTP traffic to the HTTPS host
+server {
+  ## Either remove "default_server" from the listen line below,
+  ## or delete the /etc/nginx/sites-enabled/default file. This will cause gitlab
+  ## to be served if you visit any address that your server responds to, eg.
+  ## the ip address of the server (http://x.x.x.x/)
+  listen 0.0.0.0:80;
+  listen [::]:80 ipv6only=on default_server;
+  server_name yourhost; ## Replace this with something like gitlab.example.com
+  server_tokens off; ## Don't show the nginx version number, a security best practice
+  return 301 https://$server_name$request_uri;
+  access_log  /var/log/nginx/gitlab_access.log;
+  error_log   /var/log/nginx/gitlab_error.log;
+}
+
+
 server {
 
+    listen 0.0.0.0:443 ssl;
+    listen [::]:443 ipv6only=on ssl default_server;
+    server_name yourhost; ## Replace this with something like gitlab.example.com
 
-    listen 80;
-    server_name localhost;
+    ssl on;
+    ssl_certificate /etc/ssl/nginx/host.crt;
+    ssl_certificate_key /etc/ssl/nginx/host.key;
 
-    # Application root, as defined previously
-    root /app/coffee-backend/public;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 5m;
 
-    try_files $uri/index.html $uri @app;
+    location /api {
+        #try_files $uri/index.html $uri $uri/;
+        try_files $uri/index.html $uri @app;
+        root /app/coffee-backend/public;
+    }
+
 
     location @app {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_redirect off;
         proxy_pass http://app;
+
+        error_page 500 502 503 504 /500.html;
     }
 
-    error_page 500 502 503 504 /500.html;
+
+    location / {
+      # Application Frontend root, as defined previously
+      try_files $uri /index.html;
+      root /app/coffee-frontend/;
+    }
+
+
     client_max_body_size 4G;
     keepalive_timeout 10;
 }

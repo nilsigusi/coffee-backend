@@ -63,18 +63,20 @@ CREATE DATABASE coffeeapp;
 
 now we are ready to setup the app:
 ```
-bundle install # this takes very very long! 
+bundle install # this takes very very long!
 rails -v
 # Rails 5.0.0.beta3
 
 rails db:setup RAILS_ENV=production
-# config secret key and run again
-
-mkdir /var/sockets
-chmod 777 /var/sockets
+# config secret key  in `/config/secrets.yml` and run again
 ```
 
 adjust files for nginx: `/etc/nginx/nginx.conf` and `/etc/nginx/conf.d/default.conf` . Find related files here in `doc` directory.
+
+create SSL certificates:
+https://help.github.com/enterprise/11.10.340/admin/articles/using-self-signed-ssl-certificates/
+
+and put them to `/etc/ssl/nginx`
 
 start unicron
 ```
