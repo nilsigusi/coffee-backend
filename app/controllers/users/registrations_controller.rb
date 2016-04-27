@@ -14,10 +14,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # POST /resource
-  # def create
-  #    super
-  # end
+  #POST /resource
+  def create
+    super do |resource|
+      Transaction.create!({
+        :balance => 0.0,
+        :amount => 0.0,
+        :user_id => resource.id,
+        :paymethod_id => 3
+        })
+    end
+  end
 
   # GET /resource/edit
   # def edit

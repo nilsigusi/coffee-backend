@@ -1,4 +1,5 @@
 class PaymethodsController < ApplicationController
+  before_action :authenticate_jwt
   before_action :set_paymethod, only: [:show, :update, :destroy]
 
   # GET /paymethods

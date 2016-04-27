@@ -26,8 +26,10 @@ gem 'net-ldap'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors', :require => 'rack/cors'
 
-# Mysql 
-gem 'mysql2'
+# Mysql
+group :production do
+  gem 'mysql2'
+end
 
 # Unicord
 gem 'unicorn'

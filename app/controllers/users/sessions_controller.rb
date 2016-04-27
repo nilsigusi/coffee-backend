@@ -32,7 +32,7 @@ class Users::SessionsController < Devise::SessionsController
     rescue
       # error by ldap connection, result=nil then
     end
-    
+
     if result
 
       puts result.first.mail
@@ -44,6 +44,12 @@ class Users::SessionsController < Devise::SessionsController
         @user = User.new(name: "#{result.first["givenName"][0]} #{result.first["sn"][0]}", email: email, password: "21jnfdsf0234jkewrkf034", password_confirmation: "21jnfdsf0234jkewrkf034")
         sign_in @user
         sign_in @user, :bypass => true
+        Transaction.create!({
+          :balance => 0.0,
+          :amount => 0.0,
+          :user_id => @user.id,
+          :paymethod_id => 3
+          })
       end
 
       token = AuthToken.issue_token({ user_id: @user.id, user_name: @user.name })

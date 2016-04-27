@@ -11,16 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160412141159) do
+ActiveRecord::Schema.define(version: 20160427152437) do
 
   create_table "messages", force: :cascade do |t|
     t.string   "title"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
-
-  add_index "messages", ["user_id"], name: "index_messages_on_user_id"
 
   create_table "paymethods", force: :cascade do |t|
     t.string   "title"
@@ -36,10 +35,9 @@ ActiveRecord::Schema.define(version: 20160412141159) do
     t.integer  "paymethod_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.index ["paymethod_id"], name: "index_transactions_on_paymethod_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
-
-  add_index "transactions", ["paymethod_id"], name: "index_transactions_on_paymethod_id"
-  add_index "transactions", ["user_id"], name: "index_transactions_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -57,9 +55,10 @@ ActiveRecord::Schema.define(version: 20160412141159) do
     t.boolean  "admin"
     t.string   "name"
     t.string   "cardnum"
+    t.integer  "pin"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["pin"], name: "index_users_on_pin", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
 end
