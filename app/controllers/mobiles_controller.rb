@@ -54,6 +54,9 @@ class MobilesController < ApplicationController
       @mobile = Mobile.find(params[:id])
     end
 
+    def not_found
+     raise ActionController::RoutingError.new('Not Found')
+    end
     # # Only allow a trusted parameter "white list" through.
     # def message_params
     #   params.require(:message).permit(:title, :user_id)
