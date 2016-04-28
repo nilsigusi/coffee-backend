@@ -1,2 +1,0 @@
-class Cardnum < ApplicationRecord
-end

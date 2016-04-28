@@ -7,6 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :transactions
+  has_one  :mobiles
 
   validates :name, :email, presence: true
 end

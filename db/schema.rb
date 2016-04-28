@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160427152437) do
+ActiveRecord::Schema.define(version: 0) do
 
   create_table "messages", force: :cascade do |t|
     t.string   "title"
@@ -59,6 +59,17 @@ ActiveRecord::Schema.define(version: 20160427152437) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["pin"], name: "index_users_on_pin", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+
+  create_table "mobiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "nfc_card_number"
+    t.string   "mobile_id"
+    t.integer  "mobile_pin"
+    t.index ["user_id"], name: "index_mobiles_on_user_id"
+    t.index ["mobile_pin"], name: "index_mobiles_on_pin", unique: true
+
   end
 
 end

@@ -44,11 +44,21 @@ class Users::SessionsController < Devise::SessionsController
         @user = User.new(name: "#{result.first["givenName"][0]} #{result.first["sn"][0]}", email: email, password: "21jnfdsf0234jkewrkf034", password_confirmation: "21jnfdsf0234jkewrkf034")
         sign_in @user
         sign_in @user, :bypass => true
+
+        # Create very first transaction with 0-balance
         Transaction.create!({
           :balance => 0.0,
           :amount => 0.0,
           :user_id => @user.id,
           :paymethod_id => 3
+          })
+
+        # Generate Mobile table for that user_id
+        Mobile.create!({
+          :user_id => @user.id,
+          :nfc_card_number => nil,
+          :mobile_id => @user.email,
+          :mobile_pin => (1..4).map{"0123456789".chars.to_a.sample}.join.to_i
           })
       end
 
