@@ -4,8 +4,7 @@ Rails.application.routes.draw do
 
     resources :transactions
     resources :bills
-    resources :cardnums
-    resources :pins
+    resources :mobiles
 
     resources :paymethods do
       resources :transactions
@@ -21,11 +20,7 @@ Rails.application.routes.draw do
     end
 
     resources :users do
-      resources :cardnums
-    end
-
-    resources :users do
-      resources :pins
+      resources :mobiles
     end
 
   end

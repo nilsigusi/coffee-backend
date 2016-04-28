@@ -3,12 +3,28 @@ class MobilesController < ApplicationController
   before_action :authenticate_jwt
   before_action :set_mobile, only: [:show, :update, :destroy]
 
+  # Following routes are supported
+  #  + GET /users/:user_id/mobiles !no_parameters
+  #  + GET /mobiles !parameters: nfc_card_number OR ( mobile_id AND mobile_pin ) + user must be ADMIN
+  def index
+     if params[:user_id]
+       @mobiles = Mobile.where(user_id: params[:user_id]).last or not_found
+       render json: @mobiles
+     else
+       if !current_user.admin
+          render :status => :unauthorized
+          return
+       end
 
-  # GET /users/:user_id/cardnums
-  # def index
-  #   @user = User.where(id: params[:user_id]).last
-  #   render json: @user
-  # end
+       if params[:nfc_card_number]
+         @mobiles = Mobile.where(nfc_card_number: params[:nfc_card_number]).last or not_found
+         render json: @mobiles
+       elsif params[:mobile_id] && params[:mobile_pin]
+         @mobiles = Mobile.where(mobile_id: params[:mobile_id], mobile_pin: params[:mobile_pin]).last or not_found
+         render json: @mobiles
+       end
+     end
+  end
 
   # GET /users/:user_id/cardnums/:id
   # GET cardnums/:id
@@ -22,15 +38,14 @@ class MobilesController < ApplicationController
   #   end
   # end
 
-  # # PATCH/PUT /users/:user_id/cardnums/:id
-  # def update
-  #   @user = User.where(id: params[:user_id]).last
-  #   if @user.update(cardnum: params[:id])
-  #      render json: @user
-  #   else
-  #      render json: @user.errors, status: :unprocessable_entity
-  #   end
-  # end
+  # PATCH/PUT /users/:user_id/cardnums/:id
+  def update
+    if @mobile.update(nfc_card_number: params[:nfc_card_number])
+       render json: @mobile
+    else
+       render json: @mobile.errors, status: :unprocessable_entity
+    end
+  end
 
   # private
   private

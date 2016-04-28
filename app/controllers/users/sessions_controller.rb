@@ -57,8 +57,8 @@ class Users::SessionsController < Devise::SessionsController
         Mobile.create!({
           :user_id => @user.id,
           :nfc_card_number => nil,
-          :mobile_id => @user.email,
-          :mobile_pin => (1..4).map{"0123456789".chars.to_a.sample}.join.to_i
+          :mobile_id => luser,
+          :mobile_pin => 4.times.map { [*'0'..'9'].sample }.join
           })
       end
 
