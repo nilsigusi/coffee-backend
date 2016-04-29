@@ -15,16 +15,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   #POST /resource
-  def create
-    super do |resource|
-      Transaction.create!({
-        :balance => 0.0,
-        :amount => 0.0,
-        :user_id => resource.id,
-        :paymethod_id => 3
-        })
-    end
-  end
+  # def create
+  #   super
+  # end
 
   # GET /resource/edit
   # def edit
@@ -64,12 +57,44 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # The path used after sign up.
-  # def after_sign_up_path_for(resource)
-  #   super(resource)
-  # end
+  def after_sign_up_path_for(resource)
+    generate_transaction (resource)
+    generate_mobile (resource)
+  end
 
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
+
+  def generate_mobile (user)
+    # 10 attempts to create Mobile entry with unique "mobile_id"
+    for i in 0..10
+      m_id_1 = "ext"
+      m_id_2 = 4.times.map { [*'0'..'9'].sample }.join
+      m_id = m_id_1 + m_id_2
+      if Mobile.where(:mobile_id => m_id).blank?
+        # no sich entry with mobile_id.. ok, lets crate a new one
+        Mobile.create!({
+          :user_id => user.id,
+          :nfc_card_number => nil,
+          :mobile_id => m_id,
+          :mobile_pin => 4.times.map { [*'0'..'9'].sample }.join
+          })
+        break;
+      else
+         # ups, unique entry found.. lets retry
+      end
+    end
+  end
+
+  def generate_transaction (user)
+    Transaction.create!({
+      :balance => 0.0,
+      :amount => 0.0,
+      :user_id => user.id,
+      :paymethod_id => 3
+      })
+  end
+
 end
