@@ -17,11 +17,11 @@ class MobilesController < ApplicationController
        end
 
        if params[:nfc_card_number]
-         @mobiles = Mobile.where(nfc_card_number: params[:nfc_card_number]).last or not_found
-         render json: @mobiles
+         @mobiles = Mobile.where(nfc_card_number: params[:nfc_card_number]).joins(:user).last or not_found
+         render json: @mobiles, :include => { :user => {:only => [:name]} }
        elsif params[:mobile_id] && params[:mobile_pin]
-         @mobiles = Mobile.where(mobile_id: params[:mobile_id], mobile_pin: params[:mobile_pin]).last or not_found
-         render json: @mobiles
+         @mobiles = Mobile.where(mobile_id: params[:mobile_id], mobile_pin: params[:mobile_pin]).joins(:user).last or not_found
+         render json: @mobiles, :include => { :user => {:only => [:name]} }
        end
      end
   end
@@ -55,7 +55,7 @@ class MobilesController < ApplicationController
     end
 
     def not_found
-     raise ActionController::RoutingError.new('Not Found')
+      raise ActionController::RoutingError.new('Not Found')
     end
     # # Only allow a trusted parameter "white list" through.
     # def message_params
